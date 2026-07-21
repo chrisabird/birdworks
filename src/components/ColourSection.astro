@@ -1,0 +1,165 @@
+---
+import Figure from './Figure.astro';
+
+interface Props {
+  parts: Array<{ name: string; role: string }>;
+  colours: Array<{ name: string; hex: string }>;
+  gallery: Array<{ image?: string; alt?: string; caption?: string }>;
+}
+
+const { parts, colours, gallery } = Astro.props;
+
+const combinations =
+  parts.length && colours.length ? colours.length ** parts.length : 0;
+---
+
+<section class="colours on-sumi" id="colours">
+  <div class="wrap-wide">
+    <div class="head reveal">
+      <p class="label label-accent">Colours</p>
+      <h2>
+        {colours.length} colours. {parts.length} parts.
+        {combinations > 0 && <span class="count">{combinations} combinations.</span>}
+      </h2>
+      <p class="lede measure">
+        Every part is printed to order, so each one can be a different colour.
+        Pick yours at checkout.
+      </p>
+    </div>
+
+    <ul class="swatches reveal" role="list">
+      {
+        colours.map((c) => (
+          <li>
+            <span class="chip" style={`--chip: ${c.hex}`} aria-hidden="true" />
+            <span class="chip-name">{c.name}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <ol class="parts reveal" role="list">
+      {
+        parts.map((p, i) => (
+          <li>
+            <span class="part-no">{String(i + 1).padStart(2, '0')}</span>
+            <span class="part-name">{p.name}</span>
+            <span class="part-role">{p.role}</span>
+          </li>
+        ))
+      }
+    </ol>
+
+    {
+      gallery.length > 0 && (
+        <div class="grid reveal">
+          {gallery.map((g, i) => (
+            <figure>
+              <Figure
+                src={g.image}
+                alt={g.alt ?? g.caption ?? ''}
+                ratio="1 / 1"
+                shot={`COLOURWAY ${String(i + 1).padStart(2, '0')} — ${g.caption ?? 'example combination'}`}
+              />
+              {g.caption && <figcaption>{g.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .colours {
+    padding-block: var(--space-3xl);
+  }
+
+  .head {
+    max-width: 42ch;
+    margin-bottom: var(--space-xl);
+  }
+
+  h2 {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-m);
+  }
+
+  .count {
+    color: var(--muted);
+  }
+
+  .swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-l);
+    list-style: none;
+    margin: 0 0 var(--space-xl);
+    padding: 0;
+  }
+
+  .swatches li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+  }
+
+  .chip {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: var(--chip);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--washi) 22%, transparent);
+  }
+
+  .parts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--space-l);
+    list-style: none;
+    margin: 0 0 var(--space-2xl);
+    padding: var(--space-l) 0 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .parts li {
+    display: grid;
+    gap: var(--space-3xs);
+  }
+
+  .part-no {
+    font-size: var(--step--1);
+    letter-spacing: 0.14em;
+    color: var(--shu);
+  }
+
+  .part-name {
+    font-size: var(--step-1);
+    font-weight: 560;
+    letter-spacing: -0.02em;
+  }
+
+  .part-role {
+    font-size: var(--step--1);
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: var(--space-m);
+  }
+
+  figure {
+    margin: 0;
+  }
+
+  figcaption {
+    margin-top: var(--space-2xs);
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+</style>

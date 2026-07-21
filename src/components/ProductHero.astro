@@ -1,0 +1,87 @@
+---
+import Figure from './Figure.astro';
+import { formatPrice } from '../site';
+
+interface Props {
+  title: string;
+  tagline: string;
+  image?: string | undefined;
+  imageAlt?: string | undefined;
+  price?: number | null;
+  currency?: string;
+}
+
+const { title, tagline, image, imageAlt, price, currency } = Astro.props;
+---
+
+<section class="hero on-sumi">
+  <div class="wrap-wide inner">
+    <div class="copy">
+      <h1>{title}</h1>
+      <p class="lede">{tagline}</p>
+      <p class="from">
+        {formatPrice(price ?? null, currency)}
+        <span class="from-note">· made to order in the UK</span>
+      </p>
+      <a class="button" href="#buy">Choose your colours</a>
+    </div>
+
+    <div class="shot">
+      <Figure
+        src={image}
+        alt={imageAlt ?? title}
+        ratio="4 / 5"
+        eager={true}
+        shot="HERO — assembled box, three-quarter view, on a dark background. The single best photograph on the site."
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: clamp(6rem, 16vh, 11rem) var(--space-3xl);
+  }
+
+  .inner {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 60rem) {
+    .inner {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .copy {
+    max-width: 30ch;
+  }
+
+  h1 {
+    margin-bottom: var(--space-m);
+  }
+
+  .lede {
+    color: var(--muted);
+    margin-bottom: var(--space-l);
+    max-width: 26ch;
+  }
+
+  .from {
+    font-size: var(--step-0);
+    font-weight: 560;
+    margin-bottom: var(--space-l);
+  }
+
+  .from-note {
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .shot {
+    justify-self: stretch;
+  }
+</style>

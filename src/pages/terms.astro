@@ -1,0 +1,89 @@
+---
+import Prose from '../layouts/Prose.astro';
+import { site } from '../site';
+---
+
+<Prose
+  title="Terms and conditions"
+  standfirst="The terms you buy under. Written to be read, not to be skipped."
+  updated="TBD"
+>
+  <h2>Who you are buying from</h2>
+  <dl>
+    <dt>Trading name</dt>
+    <dd><span class="tbd">{site.tradingName}</span></dd>
+    <dt>Address</dt>
+    <dd><span class="tbd">{site.tradingAddress}</span></dd>
+    <dt>Email</dt>
+    <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+  </dl>
+  <p>
+    I am a sole trader based in the United Kingdom and not currently registered
+    for VAT, so no VAT is charged on these prices.
+  </p>
+
+  <h2>Orders</h2>
+  <p>
+    Placing an order is an offer to buy. A contract forms when I email to
+    confirm your order has been accepted. If I cannot fulfil it — a print
+    failure, a colour I have run out of — I will tell you and refund you in
+    full.
+  </p>
+  <p>
+    Prices are in pounds sterling and include everything except delivery, which
+    is shown separately before you pay.
+  </p>
+
+  <h2>Colour choices</h2>
+  <p>
+    Where a product is made of several parts, you choose a colour for each part
+    during checkout. I print what you selected. Please check your selections
+    before paying — if you spot a mistake, email me quickly and I will change it
+    if printing has not started.
+  </p>
+  <p>
+    Filament colours vary slightly between batches, and screens vary more.
+    Photographs are a good guide, not an exact match.
+  </p>
+
+  <h2>What you are buying</h2>
+  <p>
+    These are 3D printed objects made to order. Layer lines are visible, small
+    variations between prints are normal, and dimensions may vary by a fraction
+    of a millimetre. None of that is a fault.
+  </p>
+
+  <h2>Payment</h2>
+  <p>
+    Payments are handled by Stripe. I never see or store your card details.
+  </p>
+
+  <h2>Delivery, cancellation and refunds</h2>
+  <p>
+    See <a href="/shipping/">Shipping</a> and
+    <a href="/returns/">Returns and cancellations</a>. Nothing in these terms
+    affects your statutory rights.
+  </p>
+
+  <h2>Third-party games and trademarks</h2>
+  <p>
+    Birdworks is not affiliated with, endorsed by, or connected to any game
+    publisher. Where a product is described as working with a particular game,
+    that describes compatibility only. All trademarks belong to their owners.
+  </p>
+
+  <h2>Liability</h2>
+  <p>
+    I am responsible for loss you suffer as a foreseeable result of my breaking
+    these terms or failing to use reasonable care. I do not limit liability
+    where the law does not allow it — including for death or personal injury
+    caused by negligence, or for fraud.
+  </p>
+
+  <h2>Complaints and law</h2>
+  <p>
+    Email <a href={`mailto:${site.email}`}>{site.email}</a> and I will reply
+    within five working days. These terms are governed by the law of England and
+    Wales.
+  </p>
+</Prose>

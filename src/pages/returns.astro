@@ -1,0 +1,61 @@
+---
+import Prose from '../layouts/Prose.astro';
+import { site } from '../site';
+---
+
+<Prose
+  title="Returns and cancellations"
+  standfirst="You have 14 days to change your mind, and separate rights if something is faulty."
+  updated="TBD"
+>
+  <h2>Your right to cancel</h2>
+  <p>
+    You can cancel your order for any reason within 14 days of the day you
+    receive it. You do not have to give a reason.
+  </p>
+  <p>
+    Items here are printed after you order, but they are printed from my own
+    standard designs — so I treat them as ordinary goods and give you the full
+    cancellation right rather than relying on the exemption for bespoke or
+    personalised items.
+  </p>
+
+  <h2>How to cancel</h2>
+  <p>
+    Email <a href={`mailto:${site.email}`}>{site.email}</a> with your order
+    number and tell me you are cancelling. A clear statement is enough — there
+    is no form to fill in.
+  </p>
+  <p>
+    Then send the item back within 14 days of telling me. Return postage is
+    yours to pay unless the item is faulty or not what you ordered.
+  </p>
+
+  <h2>Refunds</h2>
+  <p>
+    I refund within 14 days of the item coming back to me — or of you showing
+    me it has been sent, whichever is sooner. The refund covers what you paid
+    for the item plus the standard outbound delivery charge.
+  </p>
+  <p>
+    If you have handled the item more than you would in a shop and reduced its
+    value, I may reduce the refund to reflect that.
+  </p>
+
+  <h2>Faulty or wrong items</h2>
+  <p>
+    If something arrives faulty, damaged, or not as described, you have separate
+    rights under the Consumer Rights Act 2015 that sit on top of the 14-day
+    cancellation right. Tell me within 30 days and you can have a full refund.
+    After that, a repair or replacement.
+  </p>
+  <p>Return postage on faulty items is on me.</p>
+
+  <h2>Made-to-measure and custom work</h2>
+  <p>
+    Nothing currently sold here is custom. If I ever sell something made to your
+    own specification — a bespoke size, an engraved name, or a model generated
+    to your input — the 14-day cancellation right does not apply to it, and I
+    will say so clearly on that product's page before you buy.
+  </p>
+</Prose>

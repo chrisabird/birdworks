@@ -1,0 +1,167 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Figure from '../components/Figure.astro';
+import Logo from '../components/Logo.astro';
+import { formatPrice, site } from '../site';
+
+const products = (await getCollection('products'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base title={site.name} headerVariant="dark" overlayHeader={true}>
+  <section class="intro on-sumi">
+    <div class="wrap-wide inner">
+      <Logo size="clamp(4.5rem, 9vw, 7.5rem)" class="mark" />
+      <h1>
+        Things for the table,<br />designed and printed<br />one at a time.
+      </h1>
+      <p class="lede measure">
+        I design accessories for card games and tabletop wargaming, then 3D
+        print them to order in the UK. Small range, made properly, no
+        warehouse.
+      </p>
+      <a class="button" href="#products">See what I make</a>
+    </div>
+  </section>
+
+  <section class="products section" id="products">
+    <div class="wrap-wide">
+      <p class="label reveal">The range</p>
+
+      <ul class="list" role="list">
+        {
+          products.map((product) => (
+            <li class="reveal">
+              <a class="card" href={`/products/${product.id}/`}>
+                <div class="card-shot">
+                  <Figure
+                    src={product.data.hero.image ?? undefined}
+                    alt={product.data.hero.imageAlt ?? product.data.title}
+                    ratio="3 / 2"
+                    shot={`HERO — ${product.data.title}, assembled, three-quarter view`}
+                  />
+                </div>
+                <div class="card-copy">
+                  <h2>{product.data.title}</h2>
+                  <p class="card-tagline">{product.data.tagline}</p>
+                  <p class="card-price">
+                    {formatPrice(product.data.price, product.data.currency)}
+                    <span class="card-more">View →</span>
+                  </p>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="maker section-tight">
+    <div class="wrap">
+      <div class="reveal measure">
+        <p class="label label-accent">Made here</p>
+        <h2>Nothing sits on a shelf waiting for you.</h2>
+        <p>
+          Every order is printed after you place it, in the colours you choose,
+          then checked and posted by me. That means a short wait instead of
+          same-day dispatch — and it means you get exactly the combination you
+          wanted rather than whatever was left in stock.
+        </p>
+        <p>
+          <a href="/about/">More about how these are made</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro {
+    display: flex;
+    align-items: center;
+    min-height: 92svh;
+    padding-block: var(--space-3xl);
+  }
+
+  .mark {
+    color: var(--shu);
+    margin-bottom: var(--space-l);
+  }
+
+  h1 {
+    margin-bottom: var(--space-l);
+  }
+
+  .intro .lede {
+    color: var(--muted);
+    margin-bottom: var(--space-xl);
+  }
+
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .card {
+    display: grid;
+    gap: var(--space-l);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  @media (min-width: 60rem) {
+    .card {
+      grid-template-columns: 1.4fr 1fr;
+      gap: var(--space-2xl);
+      align-items: center;
+    }
+  }
+
+  .card-copy h2 {
+    font-size: var(--step-3);
+    margin-bottom: var(--space-s);
+    transition: color 0.25s var(--ease);
+  }
+
+  .card:hover h2 {
+    color: var(--shu);
+  }
+
+  .card-tagline {
+    color: var(--muted);
+    font-size: var(--step-1);
+    line-height: 1.4;
+    max-width: 24ch;
+    margin-bottom: var(--space-m);
+  }
+
+  .card-price {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-m);
+    font-weight: 560;
+    margin: 0;
+  }
+
+  .card-more {
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--shu);
+  }
+
+  .maker h2 {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-m);
+  }
+
+  .maker p {
+    color: var(--muted);
+  }
+</style>

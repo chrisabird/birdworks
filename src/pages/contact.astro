@@ -1,0 +1,49 @@
+---
+import Prose from '../layouts/Prose.astro';
+import { site } from '../site';
+---
+
+<Prose
+  title="Contact"
+  standfirst="Email is the quickest way to reach me, and the right one for anything about an order."
+>
+  <h2>Email</h2>
+  <p>
+    <a href={`mailto:${site.email}`}>{site.email}</a>
+  </p>
+  <p>
+    Orders, delivery, returns, or a question before you buy — all of it comes
+    to me. I answer in a day or two.
+  </p>
+
+  {
+    site.social.length > 0 && (
+      <>
+        <h2>Elsewhere</h2>
+        <ul>
+          {site.social.map((s) => (
+            <li>
+              <a href={s.url} rel="me noopener">
+                {s.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p>
+          Good for work in progress and questions in passing. For anything to do
+          with an order, please use email so there is a record.
+        </p>
+      </>
+    )
+  }
+
+  <h2>Business details</h2>
+  <dl>
+    <dt>Trading name</dt>
+    <dd><span class="tbd">{site.tradingName}</span></dd>
+    <dt>Address</dt>
+    <dd><span class="tbd">{site.tradingAddress}</span></dd>
+    <dt>Email</dt>
+    <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+  </dl>
+</Prose>

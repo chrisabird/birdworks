@@ -1,0 +1,270 @@
+/* ==========================================================================
+   Birdworks design system
+   Ma-driven restraint: sumi ink, washi paper, one vermilion accent.
+   Tone comes from size, weight and space — not from a second typeface.
+   ========================================================================== */
+
+:root {
+  /* --- Colour ---------------------------------------------------------- */
+  /* Warm charcoal rather than near-black: strong against paper without
+     reading as a hole punched in the page. Still ~13:1 on --washi. */
+  --sumi: #272319;
+  --sumi-2: #35301f;
+  --sumi-3: #4c4534;
+  --washi: #f5f1e7; /* paper off-white, warm */
+  --washi-2: #ece6d8;
+  --washi-3: #ddd5c3;
+  --shu: #d8452a; /* vermilion — the only accent */
+  --shu-deep: #b8351d;
+
+  --bg: var(--washi);
+  --fg: var(--sumi);
+  --muted: color-mix(in srgb, var(--sumi) 58%, var(--washi));
+  --rule: color-mix(in srgb, var(--sumi) 14%, var(--washi));
+
+  /* --- Type ------------------------------------------------------------ */
+  --font: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --step--1: clamp(0.82rem, 0.79rem + 0.14vw, 0.9rem);
+  --step-0: clamp(1rem, 0.95rem + 0.24vw, 1.15rem);
+  --step-1: clamp(1.25rem, 1.14rem + 0.5vw, 1.6rem);
+  --step-2: clamp(1.6rem, 1.35rem + 1.2vw, 2.4rem);
+  --step-3: clamp(2.1rem, 1.6rem + 2.4vw, 3.6rem);
+  --step-4: clamp(2.8rem, 1.8rem + 4.6vw, 6rem);
+
+  /* --- Space ----------------------------------------------------------- */
+  /* Ma: negative space is an active element, so the section rhythm is large. */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-s: 1rem;
+  --space-m: 1.5rem;
+  --space-l: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: clamp(5rem, 10vh, 8rem);
+  --space-3xl: clamp(7rem, 18vh, 14rem);
+
+  --measure: 34rem;
+  --width: 74rem;
+  --width-wide: 96rem;
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+
+  --ease: cubic-bezier(0.22, 0.68, 0.24, 1);
+}
+
+/* --- Reset-ish ---------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: var(--step-0);
+  font-weight: 400;
+  line-height: 1.65;
+  font-feature-settings: 'kern', 'liga', 'calt';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 620;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--step-4);
+}
+h2 {
+  font-size: var(--step-3);
+}
+h3 {
+  font-size: var(--step-2);
+}
+
+p {
+  margin: 0 0 var(--space-m);
+  text-wrap: pretty;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+  transition: color 0.2s var(--ease), text-decoration-color 0.2s var(--ease);
+}
+
+a:hover {
+  color: var(--shu);
+  text-decoration-color: currentColor;
+}
+
+:focus-visible {
+  outline: 2px solid var(--shu);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--shu);
+  color: var(--washi);
+}
+
+/* --- Layout primitives -------------------------------------------------- */
+.wrap {
+  width: min(100% - var(--gutter) * 2, var(--width));
+  margin-inline: auto;
+}
+
+.wrap-wide {
+  width: min(100% - var(--gutter) * 2, var(--width-wide));
+  margin-inline: auto;
+}
+
+.measure {
+  max-width: var(--measure);
+}
+
+.section {
+  padding-block: var(--space-3xl);
+}
+
+.section-tight {
+  padding-block: var(--space-2xl);
+}
+
+/* Dark passages: used for the hero and one or two deliberate moments. */
+.on-sumi {
+  --bg: var(--sumi);
+  --fg: var(--washi);
+  --muted: color-mix(in srgb, var(--washi) 62%, var(--sumi));
+  --rule: color-mix(in srgb, var(--washi) 18%, var(--sumi));
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* --- Small caps label --------------------------------------------------- */
+.label {
+  font-size: var(--step--1);
+  font-weight: 560;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 var(--space-m);
+}
+
+.label-accent {
+  color: var(--shu);
+}
+
+.lede {
+  font-size: var(--step-1);
+  line-height: 1.4;
+  font-weight: 420;
+  letter-spacing: -0.012em;
+}
+
+/* --- Buttons ------------------------------------------------------------ */
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: 0.85em 1.6em;
+  background: var(--shu);
+  color: var(--washi);
+  font-size: var(--step-0);
+  font-weight: 560;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.button:hover {
+  background: var(--shu-deep);
+  color: var(--washi);
+  transform: translateY(-1px);
+}
+
+.button-quiet {
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid var(--rule);
+}
+
+.button-quiet:hover {
+  background: transparent;
+  color: var(--shu);
+  border-color: var(--shu);
+}
+
+/* --- Rules -------------------------------------------------------------- */
+.rule {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 0;
+}
+
+/* --- Scroll reveal ------------------------------------------------------ */
+/* Motion gives weight and pace; it does not decorate. */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(1.25rem);
+    transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

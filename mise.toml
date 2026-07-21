@@ -1,0 +1,40 @@
+[tools]
+node = "22.18.0"
+
+[tasks.install]
+description = "Install dependencies (clean, lockfile-exact)"
+run = "npm ci"
+
+[tasks.dev]
+description = "Run the site locally at http://localhost:4321 with hot reload"
+run = "npm run dev"
+
+[tasks.open]
+description = "Run the site locally and open it in a browser"
+run = "npm run dev -- --open"
+
+[tasks.lan]
+description = "Run the site locally, reachable from other devices on your network"
+run = "npm run dev -- --host"
+
+[tasks.build]
+description = "Build the static site into dist/"
+run = "npm run build"
+
+[tasks.preview]
+description = "Serve the built site from dist/ — what GitHub Pages will serve"
+depends = ["build"]
+run = "npm run preview"
+
+[tasks.check]
+description = "Type-check Astro components and content schemas"
+run = "npm run check"
+
+[tasks.verify]
+description = "Type-check then build — run before pushing"
+depends = ["check", "build"]
+run = "echo 'check + build passed'"
+
+[tasks.clean]
+description = "Remove build output and Astro's cache"
+run = "rm -rf dist .astro"

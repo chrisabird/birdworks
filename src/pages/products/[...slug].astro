@@ -1,0 +1,102 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProductHero from '../../components/ProductHero.astro';
+import FeatureSection from '../../components/FeatureSection.astro';
+import ColourSection from '../../components/ColourSection.astro';
+import SpecsBlock from '../../components/SpecsBlock.astro';
+import BuyBlock from '../../components/BuyBlock.astro';
+
+export const getStaticPaths = (async () => {
+  const products = await getCollection('products');
+  return products
+    .filter((p) => !p.data.draft)
+    .map((product) => ({
+      params: { slug: product.id },
+      props: { product },
+    }));
+}) satisfies GetStaticPaths;
+
+const { product } = Astro.props;
+const d = product.data;
+
+const gallery = d.gallery.map((g) => ({
+  image: g.image ?? undefined,
+  alt: g.alt ?? undefined,
+  caption: g.caption ?? undefined,
+}));
+---
+
+<Base
+  title={d.title}
+  description={d.tagline}
+  headerVariant="dark"
+  overlayHeader={true}
+>
+  <ProductHero
+    title={d.title}
+    tagline={d.tagline}
+    image={d.hero.image ?? undefined}
+    imageAlt={d.hero.imageAlt ?? undefined}
+    price={d.price}
+    currency={d.currency}
+  />
+
+  {
+    d.intro && (
+      <section class="statement section">
+        <div class="wrap">
+          <p class="reveal">{d.intro}</p>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    d.sections.map((section, i) => (
+      <FeatureSection
+        heading={section.heading}
+        body={section.body}
+        image={section.image ?? undefined}
+        imageAlt={section.imageAlt ?? undefined}
+        imageSide={section.imageSide}
+        index={i}
+      />
+    ))
+  }
+
+  <ColourSection parts={d.parts} colours={d.colours} gallery={gallery} />
+
+  <SpecsBlock specs={d.specs} />
+
+  <BuyBlock
+    title={d.title}
+    price={d.price}
+    currency={d.currency}
+    postage={d.postage}
+    postageLabel={d.postageLabel}
+    leadTime={d.leadTime}
+    buyButtonId={d.stripeBuyButtonId}
+    publishableKey={d.stripePublishableKey}
+    parts={d.parts}
+  />
+</Base>
+
+<style>
+  .statement p {
+    font-size: var(--step-2);
+    line-height: 1.32;
+    letter-spacing: -0.022em;
+    font-weight: 420;
+    max-width: 22ch;
+    margin: 0;
+  }
+
+  @media (min-width: 60rem) {
+    .statement p {
+      max-width: 26ch;
+      margin-inline: auto;
+    }
+  }
+</style>

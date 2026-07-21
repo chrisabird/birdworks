@@ -1,0 +1,48 @@
+---
+import Prose from '../layouts/Prose.astro';
+import { site } from '../site';
+---
+
+<Prose
+  title="Shipping"
+  standfirst="Where I post to, what it costs, and how long it takes."
+  updated="TBD"
+>
+  <h2>Where I post</h2>
+  <p>
+    {site.shipping.region}. I do not currently post outside the UK.
+  </p>
+
+  <h2>Cost</h2>
+  <p>
+    <span class="tbd">TBD — flat rate, e.g. £3.95 per order.</span> The rate is
+    shown on every product page and again at checkout before you pay. There are
+    no other charges.
+  </p>
+
+  <h2>How long it takes</h2>
+  <p>
+    Everything is made to order, so the wait is print time plus post time.
+  </p>
+  <ul>
+    <li><span class="tbd">TBD — dispatch time, e.g. ships in 3–5 working days</span></li>
+    <li>{site.shipping.carrier} — typically 2–3 working days after dispatch</li>
+  </ul>
+  <p>
+    If something is going to take longer than that, I will email you rather than
+    let you wonder.
+  </p>
+
+  <h2>If it does not arrive</h2>
+  <p>
+    Email <a href={`mailto:${site.email}`}>{site.email}</a>. Under UK consumer
+    law your order should reach you within 30 days unless we agree otherwise. If
+    it does not, you can ask me to deliver again or cancel for a full refund.
+  </p>
+
+  <h2>Damaged in the post</h2>
+  <p>
+    Tell me within a reasonable time and send a photograph if you can. I will
+    replace it or refund it — your choice — at no cost to you.
+  </p>
+</Prose>

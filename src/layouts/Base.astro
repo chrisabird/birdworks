@@ -1,0 +1,107 @@
+---
+import '@fontsource-variable/inter/wght.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../site';
+
+interface Props {
+  title: string;
+  description?: string;
+  headerVariant?: 'light' | 'dark';
+  /** Header overlays the hero instead of sitting above it. */
+  overlayHeader?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  headerVariant = 'light',
+  overlayHeader = false,
+} = Astro.props;
+
+const fullTitle = title === site.name ? title : `${title} — ${site.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#272319" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <slot name="head" />
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <div class:list={['shell', overlayHeader && 'shell-overlay']}>
+      <Header variant={headerVariant} />
+    </div>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script>
+      // Motion gives pace, not decoration. Nothing here is required for the
+      // page to be readable — it only reveals content already in the DOM.
+      const targets = document.querySelectorAll('.reveal');
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      if (reduced.matches || !('IntersectionObserver' in window)) {
+        targets.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add('is-visible');
+              io.unobserve(entry.target);
+            }
+          },
+          { rootMargin: '0px 0px -12% 0px', threshold: 0.08 },
+        );
+        targets.forEach((el) => io.observe(el));
+      }
+    </script>
+
+    <style>
+      .shell-overlay {
+        position: absolute;
+        inset-inline: 0;
+        top: 0;
+      }
+
+      .skip {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        z-index: 100;
+        padding: var(--space-2xs) var(--space-s);
+        background: var(--shu);
+        color: var(--washi);
+      }
+
+      .skip:focus {
+        left: var(--space-s);
+        top: var(--space-s);
+      }
+    </style>
+  </body>
+</html>

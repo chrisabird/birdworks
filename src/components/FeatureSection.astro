@@ -1,0 +1,73 @@
+---
+import Figure from './Figure.astro';
+
+interface Props {
+  heading: string;
+  body: string;
+  image?: string | undefined;
+  imageAlt?: string | undefined;
+  imageSide?: 'left' | 'right';
+  index: number;
+}
+
+const { heading, body, image, imageAlt, imageSide = 'right', index } =
+  Astro.props;
+
+const number = String(index + 1).padStart(2, '0');
+---
+
+<section class:list={['feature', imageSide === 'left' && 'flip']}>
+  <div class="wrap-wide inner">
+    <div class="copy reveal">
+      <p class="label label-accent">{number}</p>
+      <h2>{heading}</h2>
+      <p class="body">{body}</p>
+    </div>
+
+    <div class="shot reveal">
+      <Figure
+        src={image}
+        alt={imageAlt ?? heading}
+        ratio="4 / 3"
+        shot={`FEATURE ${number} — ${heading}`}
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .feature {
+    padding-block: var(--space-3xl);
+  }
+
+  .inner {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 60rem) {
+    .inner {
+      grid-template-columns: 1fr 1.15fr;
+      gap: var(--space-2xl);
+    }
+
+    .flip .copy {
+      order: 2;
+    }
+  }
+
+  .copy {
+    max-width: 34ch;
+  }
+
+  h2 {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-m);
+  }
+
+  .body {
+    color: var(--muted);
+    line-height: 1.7;
+  }
+</style>

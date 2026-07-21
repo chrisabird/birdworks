@@ -1,0 +1,159 @@
+---
+import { formatPrice, site } from '../site';
+
+interface Props {
+  title: string;
+  price?: number | null;
+  currency?: string;
+  postage?: number | null;
+  postageLabel?: string;
+  leadTime?: string | null;
+  buyButtonId?: string | null;
+  publishableKey?: string | null;
+  parts: Array<{ name: string; role: string }>;
+}
+
+const {
+  title,
+  price,
+  currency = 'GBP',
+  postage,
+  postageLabel = 'UK delivery',
+  leadTime,
+  buyButtonId,
+  publishableKey,
+  parts,
+} = Astro.props;
+
+const configured = Boolean(buyButtonId && publishableKey);
+---
+
+<section class="buy section" id="buy">
+  <div class="wrap">
+    <div class="panel reveal">
+      <div class="col">
+        <p class="label label-accent">Order</p>
+        <h2>{title}</h2>
+
+        <p class="price">
+          {formatPrice(price ?? null, currency)}
+        </p>
+
+        <ul class="terms" role="list">
+          <li>
+            {
+              postage === null || postage === undefined
+                ? `${postageLabel} — rate TBC`
+                : postage === 0
+                  ? `Free ${postageLabel.toLowerCase()}`
+                  : `${formatPrice(postage, currency)} ${postageLabel.toLowerCase()} · ${site.shipping.carrier}`
+            }
+          </li>
+          <li>{leadTime ? `Made to order — ${leadTime}` : 'Made to order — lead time TBC'}</li>
+          <li>{site.shipping.region}</li>
+          <li>
+            <a href="/returns/">14-day right to cancel</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col">
+        {
+          parts.length > 0 && (
+            <div class="note">
+              <p class="note-head">Choosing your colours</p>
+              <p>
+                You pick a colour for each of the {parts.length} parts during
+                checkout — {parts.map((p) => p.name.toLowerCase()).join(', ')}.
+                Everything is printed after you order.
+              </p>
+            </div>
+          )
+        }
+
+        {
+          configured ? (
+            <stripe-buy-button
+              buy-button-id={buyButtonId}
+              publishable-key={publishableKey}
+            />
+          ) : (
+            <div class="pending">
+              <p class="pending-head">Not yet on sale</p>
+              <p>
+                The Stripe buy button appears here once the product is
+                configured. See PLAN.md §9.
+              </p>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+{configured && <script async src="https://js.stripe.com/v3/buy-button.js" is:inline />}
+
+<style>
+  .panel {
+    display: grid;
+    gap: var(--space-xl);
+    padding: var(--space-xl) 0 0;
+    border-top: 2px solid var(--fg);
+  }
+
+  @media (min-width: 52rem) {
+    .panel {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  h2 {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-s);
+  }
+
+  .price {
+    font-size: var(--step-2);
+    font-weight: 620;
+    letter-spacing: -0.03em;
+    margin-bottom: var(--space-m);
+  }
+
+  .terms {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-3xs);
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .note {
+    margin-bottom: var(--space-l);
+    font-size: var(--step--1);
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .note-head {
+    font-weight: 560;
+    color: var(--fg);
+    margin-bottom: var(--space-3xs);
+  }
+
+  .pending {
+    padding: var(--space-m);
+    border: 1px dashed var(--rule);
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .pending-head {
+    font-weight: 560;
+    color: var(--fg);
+    margin-bottom: var(--space-3xs);
+  }
+</style>

@@ -1,0 +1,68 @@
+---
+import Prose from '../layouts/Prose.astro';
+import { site } from '../site';
+---
+
+<Prose
+  title="Privacy"
+  standfirst="What little data I hold, why, and for how long."
+  updated="TBD"
+>
+  <h2>Who is responsible</h2>
+  <p>
+    <span class="tbd">{site.tradingName}</span>, contactable at
+    <a href={`mailto:${site.email}`}>{site.email}</a>, is the data controller
+    for this site.
+  </p>
+
+  <h2>This site sets no cookies</h2>
+  <p>
+    There is no analytics, no advertising, and no tracking on these pages. That
+    is why there is no cookie banner. Stripe's checkout, which opens when you
+    buy, sets its own cookies for payment and fraud prevention.
+  </p>
+
+  <h2>What I collect when you order</h2>
+  <ul>
+    <li>Your name, email address and delivery address</li>
+    <li>The colours you chose for each part</li>
+    <li>What you ordered and what you paid</li>
+  </ul>
+  <p>
+    I need these to make the thing, post it to you, and keep proper records. The
+    legal basis is performance of our contract, and legal obligation for the
+    records HMRC requires.
+  </p>
+  <p>
+    I never see your card details. Stripe processes payments and holds that data
+    as its own controller — see
+    <a href="https://stripe.com/gb/privacy" rel="noopener">Stripe's privacy policy</a>.
+  </p>
+
+  <h2>Who else sees it</h2>
+  <ul>
+    <li>Stripe — payment processing</li>
+    <li>Royal Mail or a similar carrier — the delivery address on the parcel</li>
+    <li>My email provider — messages you send me</li>
+  </ul>
+  <p>I do not sell your data or send marketing you did not ask for.</p>
+
+  <h2>How long I keep it</h2>
+  <p>
+    Order and payment records for six years, as UK tax law requires. Emails for
+    as long as they are useful, then deleted.
+  </p>
+
+  <h2>Your rights</h2>
+  <p>
+    You can ask me for a copy of your data, to correct it, or to delete it where
+    I am not required to keep it. Email
+    <a href={`mailto:${site.email}`}>{site.email}</a> and I will respond within
+    a month.
+  </p>
+  <p>
+    If you are unhappy with how I have handled your data you can complain to the
+    Information Commissioner's Office at
+    <a href="https://ico.org.uk" rel="noopener">ico.org.uk</a>.
+  </p>
+</Prose>

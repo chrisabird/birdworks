@@ -1,0 +1,42 @@
+---
+import Prose from '../layouts/Prose.astro';
+import { site } from '../site';
+---
+
+<Prose
+  title="About Birdworks"
+  standfirst="One person, a few printers, and a short list of things that ought to exist."
+>
+  <p>
+    I make accessories for the games I play — card games and tabletop wargaming.
+    Everything here started as something I wanted and could not buy: not because
+    nobody sells it, but because what they sell does one job when it could do
+    four.
+  </p>
+
+  <h2>How things are made</h2>
+  <p>
+    Every part is 3D printed to order, here in the UK. Nothing is warehoused, so
+    there is a short wait between your order and the post — and in exchange you
+    get exactly the colours you chose rather than whatever was left in a box.
+  </p>
+  <p>
+    These are printed objects and they look like it. Under a raking light you
+    will see layer lines. I would rather show you that honestly in the
+    photographs than have it arrive as a surprise.
+  </p>
+
+  <h2>Designed, not downloaded</h2>
+  <p>
+    The designs are my own. Nothing here is a copy of another company's model,
+    and nothing carries anyone else's logo or artwork. Where something is made
+    to work with a particular game, I say so plainly and leave it there.
+  </p>
+
+  <h2>Getting in touch</h2>
+  <p>
+    If something arrives wrong, or you want a combination you cannot see, email
+    me at <a href={`mailto:${site.email}`}>{site.email}</a>. It reaches me
+    directly.
+  </p>
+</Prose>

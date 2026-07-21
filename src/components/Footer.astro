@@ -1,0 +1,134 @@
+---
+import Logo from './Logo.astro';
+import { site } from '../site';
+
+const year = 2026;
+---
+
+<footer class="site-footer on-sumi">
+  <div class="wrap-wide">
+    <div class="top">
+      <div class="brand">
+        <Logo size="3.5rem" />
+        <p class="tagline">
+          Designed and 3D printed by one person, in the UK.
+        </p>
+      </div>
+
+      <nav class="cols" aria-label="Footer">
+        <div>
+          <h2 class="label">Shop</h2>
+          <a href="/#products">Products</a>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+        </div>
+        <div>
+          <h2 class="label">Legal</h2>
+          <a href="/shipping/">Shipping</a>
+          <a href="/returns/">Returns &amp; cancellations</a>
+          <a href="/terms/">Terms</a>
+          <a href="/privacy/">Privacy</a>
+        </div>
+        <div>
+          <h2 class="label">Get in touch</h2>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+          {
+            site.social.map((s) => (
+              <a href={s.url} rel="me noopener">
+                {s.name}
+              </a>
+            ))
+          }
+        </div>
+      </nav>
+    </div>
+
+    <hr class="rule" />
+
+    <div class="bottom">
+      <p>© {year} {site.tradingName}</p>
+      <p class="fine">
+        {site.tradingAddress}
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .top {
+    display: grid;
+    gap: var(--space-xl);
+    grid-template-columns: 1fr;
+    margin-bottom: var(--space-xl);
+  }
+
+  @media (min-width: 56rem) {
+    .top {
+      grid-template-columns: 1fr 1.5fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+
+  .tagline {
+    max-width: 24ch;
+    color: var(--muted);
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: var(--space-l);
+  }
+
+  .cols div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    align-items: start;
+  }
+
+  .cols a {
+    font-size: var(--step--1);
+    text-decoration: none;
+    color: var(--fg);
+  }
+
+  .cols a:hover {
+    color: var(--shu);
+  }
+
+  .label {
+    font-size: var(--step--1);
+    font-weight: 560;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding-top: var(--space-m);
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .bottom p {
+    margin: 0;
+  }
+</style>
