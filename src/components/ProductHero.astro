@@ -7,11 +7,14 @@ interface Props {
   tagline: string;
   image?: string | undefined;
   imageAlt?: string | undefined;
+  /** Crossfades in over `image` on hover. Ignored without `image`. */
+  hoverImage?: string | undefined;
   price?: number | null;
   currency?: string;
 }
 
-const { title, tagline, image, imageAlt, price, currency } = Astro.props;
+const { title, tagline, image, imageAlt, hoverImage, price, currency } =
+  Astro.props;
 ---
 
 <section class="hero on-sumi">
@@ -26,7 +29,7 @@ const { title, tagline, image, imageAlt, price, currency } = Astro.props;
       <a class="button" href="#buy">Choose your colours</a>
     </div>
 
-    <div class="shot">
+    <div class:list={['shot', image && hoverImage && 'has-hover']}>
       <Figure
         src={image}
         alt={imageAlt ?? title}
@@ -34,6 +37,18 @@ const { title, tagline, image, imageAlt, price, currency } = Astro.props;
         eager={true}
         shot="HERO — assembled box, three-quarter view, on a dark background. The single best photograph on the site."
       />
+      {
+        image && hoverImage && (
+          <img
+            class="hover-shot"
+            src={hoverImage}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async"
+          />
+        )
+      }
     </div>
   </div>
 </section>
@@ -83,5 +98,28 @@ const { title, tagline, image, imageAlt, price, currency } = Astro.props;
 
   .shot {
     justify-self: stretch;
+  }
+
+  .has-hover {
+    position: relative;
+  }
+
+  .hover-shot {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+  }
+
+  .has-hover:hover .hover-shot {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hover-shot {
+      transition: opacity 0.5s var(--ease);
+    }
   }
 </style>

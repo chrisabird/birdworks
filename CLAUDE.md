@@ -87,10 +87,14 @@ Changing any of these changes the product. Confirm with the user first.
   symbols**; no copies of their sculpts. Colours are named plainly (Red, White, Blue,
   Green, Black) — never guild names. Describing compatibility is fine; invoking brands is
   not.
-- **Colour selection happens in Stripe checkout custom fields, not on the page.** Three
-  parts × five colours is 125 combinations, which cannot be enumerated as buy buttons. Do
-  not build an on-page configurator that drives checkout — Payment Links can't be
-  prefilled, so that requires a serverless endpoint and a move off GitHub Pages.
+- **One buy button per colour when only one part is colourable.** The Commander Deck Box
+  has a single coloured part (the face frame), so its five colours are five Stripe buy
+  buttons, each its own Stripe product; an on-page radio picker just shows the matching
+  button. A product with several colourable parts multiplies out (3 × 5 = 125), so it
+  falls back to one button with Stripe checkout custom fields. `BuyBlock` picks the mode
+  from `parts[].colourable`. Do not build a configurator that *drives* checkout — Payment
+  Links can't be prefilled, so that needs a serverless endpoint and a move off GitHub
+  Pages.
 - **UK only, not VAT registered.** Stripe shipping is restricted to GB. Selling digital
   goods into the EU triggers VAT from the first sale, so don't add downloads casually.
 - **Legal pages are load-bearing**, not filler: full 14-day cancellation right (the

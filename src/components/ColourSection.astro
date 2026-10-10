@@ -2,29 +2,48 @@
 import Figure from './Figure.astro';
 
 interface Props {
-  parts: Array<{ name: string; role: string }>;
-  colours: Array<{ name: string; hex: string }>;
+  parts: Array<{ name: string; role: string; colourable: boolean }>;
+  colours: Array<{ name: string; hex: string; stripeBuyButtonId: string | null }>;
   gallery: Array<{ image?: string; alt?: string; caption?: string }>;
 }
 
 const { parts, colours, gallery } = Astro.props;
 
+const colourable = parts.filter((p) => p.colourable);
 const combinations =
-  parts.length && colours.length ? colours.length ** parts.length : 0;
+  colourable.length && colours.length ? colours.length ** colourable.length : 0;
+const single = colourable.length === 1 ? colourable[0] : undefined;
 ---
 
 <section class="colours on-sumi" id="colours">
   <div class="wrap-wide">
     <div class="head reveal">
       <p class="label label-accent">Colours</p>
-      <h2>
-        {colours.length} colours. {parts.length} parts.
-        {combinations > 0 && <span class="count">{combinations} combinations.</span>}
-      </h2>
-      <p class="lede measure">
-        Every part is printed to order, so each one can be a different colour.
-        Pick yours at checkout.
-      </p>
+      {
+        single ? (
+          <>
+            <h2>
+              {colours.length} colours{' '}
+              <span class="count">for the {single.name.toLowerCase()}.</span>
+            </h2>
+            <p class="lede measure">
+              The {single.name.toLowerCase()} is printed to order in the colour
+              you choose. Pick yours when you order.
+            </p>
+          </>
+        ) : (
+          <>
+            <h2>
+              {colours.length} colours. {colourable.length} parts.
+              {combinations > 0 && <span class="count">{combinations} combinations.</span>}
+            </h2>
+            <p class="lede measure">
+              Every part is printed to order, so each one can be a different
+              colour. Pick yours at checkout.
+            </p>
+          </>
+        )
+      }
     </div>
 
     <ul class="swatches reveal" role="list">
@@ -149,7 +168,7 @@ const combinations =
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
     gap: var(--space-m);
   }
 

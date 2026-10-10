@@ -10,7 +10,8 @@ interface Props {
   leadTime?: string | null;
   buyButtonId?: string | null;
   publishableKey?: string | null;
-  parts: Array<{ name: string; role: string }>;
+  parts: Array<{ name: string; role: string; colourable: boolean }>;
+  colours: Array<{ name: string; hex: string; stripeBuyButtonId: string | null }>;
 }
 
 const {
@@ -23,9 +24,24 @@ const {
   buyButtonId,
   publishableKey,
   parts,
+  colours,
 } = Astro.props;
 
+const colourable = parts.filter((p) => p.colourable);
+
+/**
+ * One coloured part means few enough options for a Stripe buy button each,
+ * picked on the page. More than one multiplies out, so colours are chosen in
+ * Stripe checkout custom fields against a single button.
+ */
+const single = colourable.length === 1 && colours.length > 0 ? colourable[0] : undefined;
+
 const configured = Boolean(buyButtonId && publishableKey);
+const options = colours.map((c) => ({
+  ...c,
+  live: Boolean(c.stripeBuyButtonId && publishableKey),
+}));
+const loadStripe = single ? options.some((o) => o.live) : configured;
 ---
 
 <section class="buy section" id="buy">
@@ -59,20 +75,65 @@ const configured = Boolean(buyButtonId && publishableKey);
 
       <div class="col">
         {
-          parts.length > 0 && (
-            <div class="note">
-              <p class="note-head">Choosing your colours</p>
-              <p>
-                You pick a colour for each of the {parts.length} parts during
-                checkout — {parts.map((p) => p.name.toLowerCase()).join(', ')}.
-                Everything is printed after you order.
-              </p>
+          single ? (
+            <div class="picker" data-picker>
+              <fieldset>
+                <legend class="note-head">
+                  Choose your {single.name.toLowerCase()}
+                </legend>
+                <div class="choices">
+                  {options.map((o, i) => (
+                    <label class="choice">
+                      <input
+                        type="radio"
+                        name="colour"
+                        value={String(i)}
+                        checked={i === 0}
+                      />
+                      <span class="chip" style={`--chip: ${o.hex}`} aria-hidden="true" />
+                      <span>{o.name}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+              <p class="note">Everything is printed after you order.</p>
+
+              {options.map((o, i) => (
+                <div data-option={String(i)} hidden={i !== 0}>
+                  {o.live ? (
+                    <stripe-buy-button
+                      buy-button-id={o.stripeBuyButtonId}
+                      publishable-key={publishableKey}
+                    />
+                  ) : (
+                    <div class="pending">
+                      <p class="pending-head">{o.name} — not yet on sale</p>
+                      <p>
+                        The Stripe buy button for this colour appears here once
+                        it is configured. See PLAN.md §9.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
+          ) : (
+            colourable.length > 0 && (
+              <div class="note">
+                <p class="note-head">Choosing your colours</p>
+                <p>
+                  You pick a colour for each of the {colourable.length} parts
+                  during checkout —{' '}
+                  {colourable.map((p) => p.name.toLowerCase()).join(', ')}.
+                  Everything is printed after you order.
+                </p>
+              </div>
+            )
           )
         }
 
         {
-          configured ? (
+          single ? null : configured ? (
             <stripe-buy-button
               buy-button-id={buyButtonId}
               publishable-key={publishableKey}
@@ -92,7 +153,19 @@ const configured = Boolean(buyButtonId && publishableKey);
   </div>
 </section>
 
-{configured && <script async src="https://js.stripe.com/v3/buy-button.js" is:inline />}
+{loadStripe && <script async src="https://js.stripe.com/v3/buy-button.js" is:inline />}
+
+<script>
+  // Show the buy button for the selected colour.
+  for (const picker of document.querySelectorAll<HTMLElement>('[data-picker]')) {
+    picker.addEventListener('change', (e) => {
+      const value = (e.target as HTMLInputElement).value;
+      for (const option of picker.querySelectorAll<HTMLElement>('[data-option]')) {
+        option.hidden = option.dataset.option !== value;
+      }
+    });
+  }
+</script>
 
 <style>
   .panel {
@@ -142,6 +215,54 @@ const configured = Boolean(buyButtonId && publishableKey);
     font-weight: 560;
     color: var(--fg);
     margin-bottom: var(--space-3xs);
+  }
+
+  fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin-block: var(--space-xs) var(--space-s);
+  }
+
+  .choice {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: var(--space-3xs) var(--space-xs);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    font-size: var(--step--1);
+    cursor: pointer;
+  }
+
+  .choice:has(input:checked) {
+    border-color: var(--fg);
+  }
+
+  .choice:has(input:focus-visible) {
+    outline: 2px solid var(--shu);
+    outline-offset: 2px;
+  }
+
+  .choice input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chip {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: var(--chip);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fg) 22%, transparent);
   }
 
   .pending {

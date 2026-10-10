@@ -41,10 +41,24 @@ const products = defineCollection({
      * page. This drives the copy and the colour swatches only.
      */
     parts: z
-      .array(z.object({ name: z.string(), role: z.string() }))
+      .array(
+        z.object({
+          name: z.string(),
+          role: z.string(),
+          /** False for parts printed in one fixed colour. */
+          colourable: z.boolean().default(true),
+        }),
+      )
       .default([]),
     colours: z
-      .array(z.object({ name: z.string(), hex: z.string() }))
+      .array(
+        z.object({
+          name: z.string(),
+          hex: z.string(),
+          /** Per-colour buy button, used when only one part is colourable. */
+          stripeBuyButtonId: z.string().nullable().default(null),
+        }),
+      )
       .default([]),
 
     // --- Content --------------------------------------------------------
@@ -52,6 +66,8 @@ const products = defineCollection({
       .object({
         image: z.string().nullable().optional(),
         imageAlt: z.string().nullable().optional(),
+        /** Shown on hover, e.g. an exploded view. Same framing as `image`. */
+        hoverImage: z.string().nullable().optional(),
       })
       .default({}),
     intro: z.string().optional(),

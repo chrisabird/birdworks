@@ -39,6 +39,7 @@ const gallery = d.gallery.map((g) => ({
     tagline={d.tagline}
     image={d.hero.image ?? undefined}
     imageAlt={d.hero.imageAlt ?? undefined}
+    hoverImage={d.hero.hoverImage ?? undefined}
     price={d.price}
     currency={d.currency}
   />
@@ -80,6 +81,7 @@ const gallery = d.gallery.map((g) => ({
     buyButtonId={d.stripeBuyButtonId}
     publishableKey={d.stripePublishableKey}
     parts={d.parts}
+    colours={d.colours}
   />
 </Base>
 
