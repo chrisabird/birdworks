@@ -36,12 +36,11 @@ const colourable = parts.filter((p) => p.colourable);
  */
 const single = colourable.length === 1 && colours.length > 0 ? colourable[0] : undefined;
 
-const configured = Boolean(buyButtonId && publishableKey);
-const options = colours.map((c) => ({
-  ...c,
-  live: Boolean(c.stripeBuyButtonId && publishableKey),
-}));
-const loadStripe = single ? options.some((o) => o.live) : configured;
+/** Colours without a buy button yet are left out of the picker entirely. */
+const options = publishableKey ? colours.filter((c) => c.stripeBuyButtonId) : [];
+const configured = single
+  ? options.length > 0
+  : Boolean(buyButtonId && publishableKey);
 ---
 
 <section class="buy section" id="buy">
@@ -76,47 +75,39 @@ const loadStripe = single ? options.some((o) => o.live) : configured;
       <div class="col">
         {
           single ? (
-            <div class="picker" data-picker>
-              <fieldset>
-                <legend class="note-head">
-                  Choose your {single.name.toLowerCase()}
-                </legend>
-                <div class="choices">
-                  {options.map((o, i) => (
-                    <label class="choice">
-                      <input
-                        type="radio"
-                        name="colour"
-                        value={String(i)}
-                        checked={i === 0}
-                      />
-                      <span class="chip" style={`--chip: ${o.hex}`} aria-hidden="true" />
-                      <span>{o.name}</span>
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-              <p class="note">Everything is printed after you order.</p>
+            configured && (
+              <div class="picker" data-picker>
+                <fieldset>
+                  <legend class="note-head">
+                    Choose your {single.name.toLowerCase()}
+                  </legend>
+                  <div class="choices">
+                    {options.map((o, i) => (
+                      <label class="choice">
+                        <input
+                          type="radio"
+                          name="colour"
+                          value={String(i)}
+                          checked={i === 0}
+                        />
+                        <span class="chip" style={`--chip: ${o.hex}`} aria-hidden="true" />
+                        <span>{o.name}</span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+                <p class="note">Everything is printed after you order.</p>
 
-              {options.map((o, i) => (
-                <div data-option={String(i)} hidden={i !== 0}>
-                  {o.live ? (
+                {options.map((o, i) => (
+                  <div data-option={String(i)} hidden={i !== 0}>
                     <stripe-buy-button
                       buy-button-id={o.stripeBuyButtonId}
                       publishable-key={publishableKey}
                     />
-                  ) : (
-                    <div class="pending">
-                      <p class="pending-head">{o.name} — not yet on sale</p>
-                      <p>
-                        The Stripe buy button for this colour appears here once
-                        it is configured. See PLAN.md §9.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                  </div>
+                ))}
+              </div>
+            )
           ) : (
             colourable.length > 0 && (
               <div class="note">
@@ -133,17 +124,20 @@ const loadStripe = single ? options.some((o) => o.live) : configured;
         }
 
         {
-          single ? null : configured ? (
-            <stripe-buy-button
-              buy-button-id={buyButtonId}
-              publishable-key={publishableKey}
-            />
+          configured ? (
+            !single && (
+              <stripe-buy-button
+                buy-button-id={buyButtonId}
+                publishable-key={publishableKey}
+              />
+            )
           ) : (
             <div class="pending">
               <p class="pending-head">Not yet on sale</p>
               <p>
-                The Stripe buy button appears here once the product is
-                configured. See PLAN.md §9.
+                Orders open soon. Email{' '}
+                <a href={`mailto:${site.email}`}>{site.email}</a> and I'll tell
+                you when.
               </p>
             </div>
           )
@@ -153,7 +147,7 @@ const loadStripe = single ? options.some((o) => o.live) : configured;
   </div>
 </section>
 
-{loadStripe && <script async src="https://js.stripe.com/v3/buy-button.js" is:inline />}
+{configured && <script async src="https://js.stripe.com/v3/buy-button.js" is:inline />}
 
 <script>
   // Show the buy button for the selected colour.
